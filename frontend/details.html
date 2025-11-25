@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details - MovieExplorer</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html" class="logo">🎬   MovieExplorer</a>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="category.html?type=popular" class="nav-link">Movies</a></li>
+            <li><a href="category.html?type=top_rated" class="nav-link">TV Shows</a></li>
+            <li><a href="search.html" class="nav-link">Search</a></li>
+            <li><a href="/admin/login-page" class="nav-link">Admin</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <button class="search-btn" onclick="location.href='search.html'">
+                <i class="fas fa-search"></i>
+            </button>
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+            <li><a href="category.html?type=popular" class="mobile-nav-link">Movies</a></li>
+            <li><a href="category.html?type=top_rated" class="mobile-nav-link">TV Shows</a></li>
+            <li><a href="search.html" class="mobile-nav-link">Search</a></li>
+        </ul>
+    </div>
+</header>
+    <main class="details-page">
+        <div class="container">
+            <div id="movieDetails">
+                <!-- Movie details will be loaded here -->
+            </div>
+            
+            <section class="cast-section">
+                <h2>Cast</h2>
+                <div class="cast-grid" id="castContainer">
+                    <!-- Cast members will be loaded here -->
+                </div>
+            </section>
+
+            <section class="similar-section">
+                <h2>Similar Movies</h2>
+                <div class="movies-grid" id="similarMovies">
+                    <!-- Similar movies will be loaded here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MovieExplorer. All rights reserved.</p>
+        </div>
+    </footer>
+<script src="assets/js/mobile.js"></script> <!-- Add this -->
+        <script src="assets/js/main.js"></script>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/details.js"></script>
+</body>
+</html>
+

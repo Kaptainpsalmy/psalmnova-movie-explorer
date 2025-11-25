@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Test</title>
+</head>
+<body>
+    <h1>Backend Connection Test</h1>
+    <button onclick="testBackend()">Test Backend Connection</button>
+    <div id="result"></div>
+
+    <script src="assets/js/config.js"></script>
+    <script>
+        async function testBackend() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Testing connection to: ' + APP_CONFIG.API_BASE_URL + '</p>';
+            
+            try {
+                const response = await fetch(APP_CONFIG.API_BASE_URL + '/trending');
+                if (response.ok) {
+                    resultDiv.innerHTML += '<p style="color: green;">✅ Backend is connected and responding!</p>';
+                } else {
+                    resultDiv.innerHTML += '<p style="color: red;">❌ Backend returned error: ' + response.status + '</p>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML += '<p style="color: red;">❌ Cannot connect to backend: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

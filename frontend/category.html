@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Categories - MovieExplorer</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html" class="logo">🎬 MovieExplorer</a>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="category.html?type=popular" class="nav-link">Movies</a></li>
+            <li><a href="category.html?type=top_rated" class="nav-link">TV Shows</a></li>
+            <li><a href="search.html" class="nav-link">Search</a></li>
+            <li><a href="/admin/login-page" class="nav-link">Admin</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <button class="search-btn" onclick="location.href='search.html'">
+                <i class="fas fa-search"></i>
+            </button>
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+            <li><a href="category.html?type=popular" class="mobile-nav-link">Movies</a></li>
+            <li><a href="category.html?type=top_rated" class="mobile-nav-link">TV Shows</a></li>
+            <li><a href="search.html" class="mobile-nav-link">Search</a></li>
+        </ul>
+    </div>
+</header>
+
+    <main class="category-page">
+        <div class="container">
+            <div class="category-header">
+                <h1 id="categoryTitle">Browse Movies</h1>
+                <p id="categoryDescription">Discover amazing films and TV shows across different categories</p>
+            </div>
+
+            <!-- Category Navigation -->
+            <div class="category-nav">
+                <div class="category-filters">
+                    <button class="filter-btn active" data-type="popular">
+                        <i class="fas fa-fire"></i> Popular
+                    </button>
+                    <button class="filter-btn" data-type="trending">
+                        <i class="fas fa-chart-line"></i> Trending
+                    </button>
+                    <button class="filter-btn" data-type="top_rated">
+                        <i class="fas fa-star"></i> Top Rated
+                    </button>
+                    <button class="filter-btn" data-type="upcoming">
+                        <i class="fas fa-calendar-alt"></i> Upcoming
+                    </button>
+                    <button class="filter-btn" data-type="now_playing">
+                        <i class="fas fa-play-circle"></i> Now Playing
+                    </button>
+                </div>
+            </div>
+
+            <!-- Movies Grid -->
+            <div class="movies-grid" id="categoryMovies">
+                <!-- Movies will be loaded here dynamically -->
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading more movies...</p>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResults" class="no-results" style="display: none;">
+                <i class="fas fa-film fa-3x"></i>
+                <h3>No movies found</h3>
+                <p>Try selecting a different category or check back later for new releases.</p>
+                <button class="btn btn-primary" onclick="switchCategory('popular')">
+                    Browse Popular Movies
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MovieExplorer</h3>
+                    <p>Discover your next favorite movie or TV show with our comprehensive database.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="search.html">Search</a></li>
+                        <li><a href="category.html?type=popular">Movies</a></li>
+                        <li><a href="/admin/login-page">Admin</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="category.html?type=trending">Trending</a></li>
+                        <li><a href="category.html?type=popular">Popular</a></li>
+                        <li><a href="category.html?type=top_rated">Top Rated</a></li>
+                        <li><a href="category.html?type=upcoming">Upcoming</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MovieExplorer. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="assets/js/main.js"></script>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/category.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Movie - Movie Explorer Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            color: #2c3e50;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        .btn-back {
+            background: #95a5a6;
+            color: white;
+        }
+        .btn-back:hover {
+            background: #7f8c8d;
+        }
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-help {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            background: #219a52;
+        }
+        .submit-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .error-message {
+            background: #fee;
+            color: #e74c3c;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+        .success-message {
+            background: #efe;
+            color: #27ae60;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+        .movie-preview {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+        .movie-preview h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        .preview-content {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .preview-poster {
+            width: 100px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+        .preview-info {
+            flex: 1;
+        }
+        .preview-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .preview-overview {
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Add Movie Recommendation</h1>
+            <a href="/admin/manage-recommendations-page" class="btn btn-back">← Back to Recommendations</a>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <div class="form-container">
+            <form id="addMovieForm">
+                <div class="form-group">
+                    <label for="movie_id">TMDB Movie ID *</label>
+                    <input type="number" id="movie_id" name="movie_id" required 
+                           placeholder="Enter TMDB Movie ID (e.g., 550 for Fight Club)">
+                    <div class="form-help">
+                        Find Movie IDs on themoviedb.org. Search for a movie and copy the ID from its URL.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category">
+                        <option value="Featured">Featured</option>
+                        <option value="Popular">Popular</option>
+                        <option value="New Release">New Release</option>
+                        <option value="Classic">Classic</option>
+                        <option value="Staff Pick">Staff Pick</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Custom Description (Optional)</label>
+                    <textarea id="description" name="description" 
+                              placeholder="Leave empty to use TMDB overview"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Add Movie Recommendation</button>
+            </form>
+
+            <div id="moviePreview" class="movie-preview">
+                <h4>Movie Preview</h4>
+                <div class="preview-content">
+                    <img id="previewPoster" class="preview-poster" src="" alt="Movie poster">
+                    <div class="preview-info">
+                        <div id="previewTitle" class="preview-title"></div>
+                        <div id="previewOverview" class="preview-overview"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function checkAuth() {
+            try {
+                const response = await fetch('/admin/check-auth');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
+                    window.location.href = '/admin/login-page';
+                }
+            } catch (error) {
+                window.location.href = '/admin/login-page';
+            }
+        }
+
+        // Preview movie when ID is entered
+        document.getElementById('movie_id').addEventListener('blur', async function() {
+            const movieId = this.value.trim();
+            if (!movieId) return;
+
+            try {
+                const response = await fetch(`/api/movie/${movieId}`);
+                const movieData = await response.json();
+                
+                if (response.ok && !movieData.error) {
+                    document.getElementById('moviePreview').style.display = 'block';
+                    document.getElementById('previewTitle').textContent = movieData.title;
+                    document.getElementById('previewOverview').textContent = movieData.overview || 'No overview available.';
+                    document.getElementById('previewPoster').src = 
+                        movieData.poster_path ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}` : '/static/images/placeholder.jpg';
+                } else {
+                    document.getElementById('moviePreview').style.display = 'none';
+                }
+            } catch (error) {
+                document.getElementById('moviePreview').style.display = 'none';
+            }
+        });
+
+        document.getElementById('addMovieForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const movieId = document.getElementById('movie_id').value;
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('description').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // Reset messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Adding Movie...';
+
+            try {
+                const response = await fetch('/admin/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        movie_id: parseInt(movieId),
+                        category: category,
+                        description: description
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    successMessage.textContent = data.message + ' Redirecting...';
+                    successMessage.style.display = 'block';
+                    
+                    // Reset form
+                    document.getElementById('addMovieForm').reset();
+                    document.getElementById('moviePreview').style.display = 'none';
+                    
+                    // Redirect to recommendations page after success
+                    setTimeout(() => {
+                        window.location.href = '/admin/manage-recommendations-page';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = data.error || 'Failed to add movie';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Network error. Please try again.';
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Add Movie Recommendation';
+            }
+        });
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>

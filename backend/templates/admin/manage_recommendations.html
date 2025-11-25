@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Recommendations - Movie Explorer Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            color: #2c3e50;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-back {
+            background: #95a5a6;
+            color: white;
+        }
+        .btn-back:hover {
+            background: #7f8c8d;
+        }
+        .recommendations-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .recommendation-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+        .recommendation-poster {
+            width: 120px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .recommendation-content {
+            flex: 1;
+        }
+        .recommendation-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .recommendation-meta {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .recommendation-description {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        .recommendation-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .no-data {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 3rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+        .error-message {
+            background: #fee;
+            color: #e74c3c;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+        .success-message {
+            background: #efe;
+            color: #27ae60;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Manage Recommendations</h1>
+            <div style="display: flex; gap: 1rem;">
+                <a href="/admin/dashboard-page" class="btn btn-back">← Back to Dashboard</a>
+                <a href="/admin/add-movie-page" class="btn btn-primary">Add New Movie</a>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <div id="recommendationsList" class="recommendations-grid">
+            <div class="loading">Loading recommendations...</div>
+        </div>
+    </div>
+
+    <script>
+        async function checkAuth() {
+            try {
+                const response = await fetch('/admin/check-auth');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
+                    window.location.href = '/admin/login-page';
+                    return;
+                }
+                
+                loadRecommendations();
+            } catch (error) {
+                window.location.href = '/admin/login-page';
+            }
+        }
+
+        async function loadRecommendations() {
+            try {
+                const response = await fetch('/admin/recommendations');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayRecommendations(data.recommendations);
+                } else {
+                    showError(data.error || 'Failed to load recommendations');
+                }
+            } catch (error) {
+                showError('Network error loading recommendations');
+            }
+        }
+
+        function displayRecommendations(recommendations) {
+            const container = document.getElementById('recommendationsList');
+            
+            if (recommendations.length === 0) {
+                container.innerHTML = `
+                    <div class="no-data">
+                        <h3>No Recommendations Yet</h3>
+                        <p>Get started by adding your first movie recommendation!</p>
+                        <a href="/admin/add-movie-page" class="btn btn-primary" style="margin-top: 1rem;">Add First Movie</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-card" data-id="${rec.id}">
+                    <img src="${rec.image_url || '/static/images/placeholder.jpg'}" 
+                         alt="${rec.movie_title}" 
+                         class="recommendation-poster"
+                         onerror="this.src='/static/images/placeholder.jpg'">
+                    <div class="recommendation-content">
+                        <h3 class="recommendation-title">${rec.movie_title}</h3>
+                        <div class="recommendation-meta">
+                            <strong>Category:</strong> ${rec.category} • 
+                            <strong>Added:</strong> ${new Date(rec.created_at).toLocaleDateString()} •
+                            <strong>Movie ID:</strong> ${rec.movie_id}
+                        </div>
+                        <p class="recommendation-description">${rec.description || 'No description available.'}</p>
+                        <div class="recommendation-actions">
+                            <button class="btn btn-danger" onclick="deleteRecommendation(${rec.id})">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteRecommendation(recommendationId) {
+            if (!confirm('Are you sure you want to delete this recommendation? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/admin/delete/${recommendationId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showSuccess(data.message);
+                    // Remove the recommendation from the UI
+                    document.querySelector(`[data-id="${recommendationId}"]`).remove();
+                    // Reload the list to ensure consistency
+                    setTimeout(loadRecommendations, 500);
+                } else {
+                    showError(data.error || 'Failed to delete recommendation');
+                }
+            } catch (error) {
+                showError('Network error deleting recommendation');
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => successDiv.style.display = 'none', 5000);
+        }
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>

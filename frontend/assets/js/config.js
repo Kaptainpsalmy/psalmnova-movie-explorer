@@ -7,7 +7,7 @@ const getApiBaseUrl = () => {
     // If we're running on a deployed frontend
     else {
         // Return your actual deployed backend URL
-        return 'https://your-backend-domain.vercel.app'; // Replace with your actual backend URL
+        return 'https://psalmnova-movie-explorer.onrender.com/'; // Replace with your actual backend URL
     }
 };
 
